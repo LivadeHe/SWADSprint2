@@ -7,24 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 
-public class AuthorEntity {
+public class AuthorEntity extends PersonEntity {
 
-    @Id
-    @GeneratedValue( strategy = GenerationType.AUTO)
-    @Column(name = "auth_id")
-    private long id;
-
-    @Column(name = "auth_name")
-    private String name;
-
-    @Column(name = "auth_age")
-    private int age;
+@ManyToMany
+    Set<BookEntity> linkedAuthorBooks;
 
 
 

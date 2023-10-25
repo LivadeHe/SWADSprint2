@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +24,7 @@ public class BookEntity {
 
     @Column(name = "book_author")
     private String author;
+
+    @ManyToMany
+    Set<AuthorEntity> linkedAuthorBooks;
 }
