@@ -25,8 +25,8 @@ public class BookEntity {
 
     @Column(name = "book_title")
     private String title;
-
+/*
    @ManyToMany (mappedBy = "linked_books")
     Set<AuthorEntity> linked_authors;
-
+*/
 }

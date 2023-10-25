@@ -43,7 +43,6 @@ public class BookAuthorTest {
         authorRepository.saveAll(authors);
         authorRepository.findAll().forEach(System.out::println);
     }
-
     @Test
     void testBookPersistance() {
 

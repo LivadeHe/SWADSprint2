@@ -29,7 +29,7 @@ public class AuthorEntity {
 
     @Column(name = "auth_mail")
     private String mail;
-
+/*
     @ManyToMany(mappedBy = "linked_books")
     @JoinTable(
 
@@ -37,6 +37,6 @@ public class AuthorEntity {
             inverseJoinColumns = @JoinColumn(name = "book_id"))
 
     Set<BookEntity> linked_books;
-
+*/
 
 }
