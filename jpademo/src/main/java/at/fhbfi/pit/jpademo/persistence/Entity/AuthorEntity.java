@@ -17,8 +17,16 @@ import java.util.Set;
 
 public class AuthorEntity extends PersonEntity {
 
+
 @ManyToMany
-    Set<BookEntity> linkedAuthorBooks;
+        @JoinTable(
+
+                name = "author_book", joinColumns = @JoinColumn(name = "author_id"),
+                inverseJoinColumns = @JoinColumn(name = "book_id")
+
+        )
+
+    Set<BookEntity> linkedBooks;
 
 
 
