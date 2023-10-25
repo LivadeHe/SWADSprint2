@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,6 +17,7 @@ import java.util.Set;
 public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "book_id")
     private long id;
 
     @Column(name = "book_isbn")
@@ -26,9 +26,7 @@ public class BookEntity {
     @Column(name = "book_title")
     private String title;
 
-   // @Column(name = "book_author")
-   // private String author;
+   @ManyToMany (mappedBy = "linked_books")
+    Set<AuthorEntity> linked_authors;
 
-    @ManyToMany (mappedBy = "book_id")
-    Set<AuthorEntity> linkedAuthors;
 }

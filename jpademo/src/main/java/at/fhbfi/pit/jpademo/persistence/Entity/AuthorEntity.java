@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.Set;
 
@@ -15,22 +14,29 @@ import java.util.Set;
 @Builder
 @Entity
 
-public class AuthorEntity extends PersonEntity {
+//public class AuthorEntity extends PersonEntity {
 
+public class AuthorEntity {
 
-@ManyToMany
-        @JoinTable(
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
-                name = "author_book", joinColumns = @JoinColumn(name = "author_id"),
-                inverseJoinColumns = @JoinColumn(name = "book_id")
+    @Column(name = "auth_id")
+    private Long id;
 
-        )
+    @Column(name = "auth_name")
+    private String name;
 
-    Set<BookEntity> linkedBooks;
+    @Column(name = "auth_mail")
+    private String mail;
 
+    @ManyToMany(mappedBy = "linked_books")
+    @JoinTable(
 
+            name = "author_book", joinColumns = @JoinColumn(name = "auth_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
 
-
+    Set<BookEntity> linked_books;
 
 
 }
