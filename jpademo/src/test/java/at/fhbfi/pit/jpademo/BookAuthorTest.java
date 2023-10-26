@@ -3,6 +3,8 @@ package at.fhbfi.pit.jpademo;
 import at.fhbfi.pit.jpademo.persistence.Entity.AuthorEntity;
 
 import at.fhbfi.pit.jpademo.persistence.Entity.BookEntity;
+import at.fhbfi.pit.jpademo.persistence.Entity.HobbyEntity;
+import at.fhbfi.pit.jpademo.persistence.Entity.PersonEntity;
 import at.fhbfi.pit.jpademo.persistence.Repository.AuthorRepository;
 import at.fhbfi.pit.jpademo.persistence.Repository.BookRepository;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 @SpringBootTest
 public class BookAuthorTest {
 
@@ -61,5 +65,46 @@ public class BookAuthorTest {
         bookRepository.findAll().forEach(System.out::println);
 
     }
+
+
+
+    @Test
+    void testAuthorBookRelationship() {
+        // Erstellen eines Autors und eines Buchs
+        AuthorEntity author = AuthorEntity.builder()
+                .name("Johan Goethe")
+                .build();
+        authorRepository.save(author);
+
+        BookEntity book = BookEntity.builder()
+                .title("Sample Book")
+                .isbn(1234567890L)
+                .build();
+        bookRepository.save(book);
+
+
+
+        // Autoren und Bücher verknüpfen
+        author.getLinked_books().add(book);
+        book.getLinked_authors().add(author);
+
+        // Speichern der Änderungen
+        authorRepository.save(author);
+        bookRepository.save(book);
+
+        // Ausgabe der verknüpften Autoren und Bücher
+        System.out.println("************");
+        System.out.println("Autoren des Buchs " + book.getTitle());
+        bookRepository.findBooksByLinked_authors(author).forEach(System.out::println);
+
+        System.out.println("************");
+        System.out.println("Bücher des Autors " + author.getName());
+        authorRepository.findAuthorsByLinked_books(book).forEach(System.out::println);
+
+    }
+
+
+
+
 
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -29,14 +30,14 @@ public class AuthorEntity {
 
     @Column(name = "auth_mail")
     private String mail;
-/*
-    @ManyToMany(mappedBy = "linked_books")
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
 
-            name = "author_book", joinColumns = @JoinColumn(name = "auth_id"),
+            name = "author_book",
+            joinColumns = @JoinColumn(name = "auth_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
 
     Set<BookEntity> linked_books;
-*/
 
 }
