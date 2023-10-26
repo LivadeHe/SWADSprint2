@@ -32,6 +32,6 @@ public class BookEntity {
            name = "author_book",
            joinColumns = @JoinColumn(name = "book_id"),
            inverseJoinColumns = @JoinColumn(name = "auth_id"))
-    Set<AuthorEntity> linked_authors;
+    Set<AuthorEntity> linked_authors = new HashSet<>(); //initialisieren von linked authors
 
 }
