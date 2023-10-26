@@ -71,40 +71,37 @@ public class BookAuthorTest {
     @Test
     void testAuthorBookRelationship() {
         // Erstellen eines Autors und eines Buchs
-        AuthorEntity author = AuthorEntity.builder()
+        AuthorEntity goethe = AuthorEntity.builder()
                 .name("Johan Goethe")
+                .mail("johann@goethe.de")
                 .build();
-        authorRepository.save(author);
+        authorRepository.save(goethe);
 
-        BookEntity book = BookEntity.builder()
-                .title("Sample Book")
+        BookEntity faust = BookEntity.builder()
+                .title("Faust")
                 .isbn(1234567890L)
                 .build();
-        bookRepository.save(book);
-
-
+        bookRepository.save(faust);
 
         // Autoren und Bücher verknüpfen
-        author.getLinked_books().add(book);
-        book.getLinked_authors().add(author);
+        faust.getLinked_authors().add(goethe);
+        goethe.getLinked_books().add(faust);
+
+
 
         // Speichern der Änderungen
-        authorRepository.save(author);
-        bookRepository.save(book);
+        authorRepository.save(goethe);
+        bookRepository.save(faust);
 
+        /*
         // Ausgabe der verknüpften Autoren und Bücher
         System.out.println("************");
         System.out.println("Autoren des Buchs " + book.getTitle());
-        bookRepository.findBooksByLinked_authors(author).forEach(System.out::println);
+      bookRepository.findBooksByLinked_authors(author).forEach(System.out::println);
 
         System.out.println("************");
         System.out.println("Bücher des Autors " + author.getName());
-        authorRepository.findAuthorsByLinked_books(book).forEach(System.out::println);
-
+       authorRepository.findAuthorsByLinked_books(book).forEach(System.out::println);
+*/
     }
-
-
-
-
-
 }
