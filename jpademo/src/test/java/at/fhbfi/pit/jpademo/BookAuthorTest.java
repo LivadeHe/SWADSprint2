@@ -1,9 +1,7 @@
 package at.fhbfi.pit.jpademo;
 
 import at.fhbfi.pit.jpademo.persistence.Entity.AuthorEntity;
-
 import at.fhbfi.pit.jpademo.persistence.Entity.BookEntity;
-import at.fhbfi.pit.jpademo.persistence.Entity.HobbyEntity;
 import at.fhbfi.pit.jpademo.persistence.Entity.PersonEntity;
 import at.fhbfi.pit.jpademo.persistence.Repository.AuthorRepository;
 import at.fhbfi.pit.jpademo.persistence.Repository.BookRepository;

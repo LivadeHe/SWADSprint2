@@ -38,6 +38,6 @@ public class AuthorEntity {
             joinColumns = @JoinColumn(name = "auth_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
 
-    Set<BookEntity> linked_books;
+    Set<BookEntity> linked_books = new HashSet<>(); //initialisieren von linked_books
 
 }

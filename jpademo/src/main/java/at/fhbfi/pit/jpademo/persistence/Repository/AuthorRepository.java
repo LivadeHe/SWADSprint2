@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<AuthorEntity, Long> {
-    List<AuthorEntity> findByName (String name);
+     List<AuthorEntity> findByName(String name);
 
     // List<AuthorEntity> findAuthorsByLinked_books(BookEntity book);
 
