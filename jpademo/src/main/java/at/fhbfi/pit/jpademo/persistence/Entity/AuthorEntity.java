@@ -1,8 +1,8 @@
 package at.fhbfi.pit.jpademo.persistence.Entity;
 
-import at.fhbfi.pit.jpademo.persistence.Repository.BookRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,12 +32,17 @@ public class AuthorEntity {
   @Column(name = "auth_mail")
   private String mail;
 
-  @ManyToMany
+  /*
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "author_book",
       joinColumns = @JoinColumn(name = "auth_id"),
       inverseJoinColumns = @JoinColumn(name = "book_id"))
-  Set<BookEntity> written_books = new HashSet<>();;
+  @Builder.Default
+  Set<BookEntity> written_books = new HashSet<>();
+   */
 
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "written_by")
+  Set<BookEntity> written_books = new HashSet<>();
 
 }

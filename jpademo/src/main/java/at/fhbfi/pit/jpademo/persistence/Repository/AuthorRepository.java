@@ -9,4 +9,6 @@ public interface AuthorRepository extends JpaRepository<AuthorEntity, Long> {
 
   List<AuthorEntity> findByName(String name);
 
+  List<AuthorEntity> findByNameOrderByMailAsc(String name);
+
 }

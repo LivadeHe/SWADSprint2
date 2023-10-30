@@ -5,16 +5,14 @@ import at.fhbfi.pit.jpademo.persistence.Entity.BookEntity;
 import at.fhbfi.pit.jpademo.persistence.Repository.AuthorRepository;
 import at.fhbfi.pit.jpademo.persistence.Repository.BookRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
+
 public class AuthorBookTests {
 
   @Autowired
@@ -40,8 +38,21 @@ public class AuthorBookTests {
         .mail("franz@kafka.com")
         .build());
 
+    authors.add(AuthorEntity.builder()
+        .name("Tolkien")
+        .mail("tolkien@tolkien.com")
+        .build());
+
+    authors.add(AuthorEntity.builder()
+        .name("Tolkien")
+        .mail("jrr@tolkien.com")
+        .build());
+
     authorRepository.saveAll(authors);
+    System.out.println("****** Alle Authors *****");
     authorRepository.findAll().forEach(System.out::println);
+    System.out.println("****** Authors mit name Tolkien ASC *****");
+    authorRepository.findByNameOrderByMailAsc("Tolkien").forEach(System.out::println);
     System.out.println("***********");
 
   }
@@ -52,28 +63,43 @@ public class AuthorBookTests {
 
     books.add(BookEntity.builder()
         .title("Faust")
-        .isbn(789765413216L)
+        .isbn(12345L)
         .build());
 
     books.add(BookEntity.builder()
         .title("Die Verwandlung")
-        .isbn(1478598547782755L)
+        .isbn(123456789L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die Gefährten")
+        .isbn(3589745L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die zwei Türme")
+        .isbn(3811477L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die Rückkehr des Königs")
+        .isbn(998251474L)
         .build());
 
     bookRepository.saveAll(books);
+    System.out.println("****** Alle Bücher *****");
     bookRepository.findAll().forEach(System.out::println);
+    System.out.println("***** Bücher mit im Titel Verwandl ******");
+    bookRepository.findByTitleContaining("Verwandl").forEach(System.out::println);
+    System.out.println("****** Bücher mit im Title Lord ASC *****");
+    bookRepository.findByTitleContainingOrderByTitleAsc("Lord").forEach(System.out::println);
     System.out.println("***********");
 
   }
 
+
   @Test
   void testAuthorBook() {
-    AuthorEntity goethe = AuthorEntity.builder()
-        .name("Goethe")
-        .mail("wolfgang@goethe.com")
-        .build();
-    authorRepository.save(goethe);
-
     BookEntity faust = BookEntity.builder()
         .title("Faust")
         .isbn(489745614679L)
@@ -85,23 +111,37 @@ public class AuthorBookTests {
         .build();
 
     bookRepository.saveAll(List.of(faust, leidensWerthers));
-    goethe.getWritten_books().add(faust);
-    goethe.getWritten_books().add(leidensWerthers);
-    bookRepository.saveAll(List.of(faust, leidensWerthers));
-    faust.getWritten_by().add(goethe);
-    leidensWerthers.getWritten_by().add(goethe);
+
+    AuthorEntity goethe = AuthorEntity.builder()
+        .name("Goethe")
+        .mail("wolfgang@goethe.com")
+        .build();
     authorRepository.save(goethe);
 
 
-    System.out.println("Bücher von " + goethe.getName() + ":");
-    for (BookEntity book : goethe.getWritten_books()) {
-      System.out.println(book.getTitle());
-    }
+    goethe.getWritten_books().add(faust);
+    goethe.getWritten_books().add(leidensWerthers);
 
-    System.out.println("Autoren von " + faust.getTitle() + ":");
-    for (AuthorEntity author : faust.getWritten_by()) {
-      System.out.println(author.getName());
-    }
+    authorRepository.save(goethe);
+
+
+    // faust.getWritten_by().add(goethe);
+    // leidensWerthers.getWritten_by().add(goethe);
+    // bookRepository.saveAll(List.of(faust, leidensWerthers));
+
+    // bookRepository.findAll().forEach(System.out::println);
+    // authorRepository.findAll().forEach(System.out::println);
+
+
+//    System.out.println("Bücher von " + goethe.getName() + ":");
+//    for (BookEntity book : goethe.getWritten_books()) {
+//      System.out.println(book.getTitle());
+//    }
+//
+//    System.out.println("Autoren von " + faust.getTitle() + ":");
+//    for (AuthorEntity author : faust.getWritten_by()) {
+//      System.out.println(author.getName());
+//    }
 
 
   }
