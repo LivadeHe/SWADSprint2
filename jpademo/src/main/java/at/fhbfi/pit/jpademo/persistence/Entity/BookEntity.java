@@ -7,12 +7,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import lombok.*;
-
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -32,14 +30,29 @@ public class BookEntity {
   @Column(name = "book_isbn")
   private Long isbn;
 
-  //@ManyToMany(fetch = FetchType.EAGER, mappedBy = "written_books",  cascade = {CascadeType.ALL})
-  //private Set<AuthorEntity> written_by = new HashSet<>();
-
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
-      name = "author_book",
-      joinColumns = @JoinColumn(name = "book_id"),
-      inverseJoinColumns = @JoinColumn(name = "auth_id"))
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "written_books",  cascade = {CascadeType.ALL})
   private Set<AuthorEntity> written_by = new HashSet<>();
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    BookEntity that = (BookEntity) o;
+    return Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+
+  public String toString() {
+    return "BookEntity{" +
+        "id=" + id +
+        ", title='" + title + '\'' +
+        ", isbn=" + isbn +
+        //", written_by=" + written_by +
+        '}';
+  }
 }

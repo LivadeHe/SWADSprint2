@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -32,17 +33,36 @@ public class AuthorEntity {
   @Column(name = "auth_mail")
   private String mail;
 
-  /*
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "author_book",
       joinColumns = @JoinColumn(name = "auth_id"),
       inverseJoinColumns = @JoinColumn(name = "book_id"))
   @Builder.Default
-  Set<BookEntity> written_books = new HashSet<>();
-   */
+  private Set<BookEntity> written_books = new HashSet<>();
 
-  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "written_by")
-  Set<BookEntity> written_books = new HashSet<>();
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    AuthorEntity that = (AuthorEntity) o;
+    return Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+  @Override
+  public String toString() {
+    return "AuthorEntity{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", mail='" + mail + '\'' +
+        ", written_books=" + written_books +
+        '}';
+  }
+
 
 }
