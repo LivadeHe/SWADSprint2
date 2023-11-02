@@ -1,6 +1,5 @@
 package at.fhbfi.pit.jpademo.persistence.Repository;
 
-import at.fhbfi.pit.jpademo.persistence.Entity.AuthorEntity;
 import at.fhbfi.pit.jpademo.persistence.Entity.BookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
