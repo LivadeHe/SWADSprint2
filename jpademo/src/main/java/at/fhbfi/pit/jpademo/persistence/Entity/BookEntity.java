@@ -8,16 +8,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "book")
 public class BookEntity {
 
   @Id
@@ -30,23 +33,18 @@ public class BookEntity {
   @Column(name = "book_isbn")
   private Long isbn;
 
-  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "written_books",  cascade = {CascadeType.ALL})
-  private Set<AuthorEntity> written_by = new HashSet<>();
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "written_books", cascade = {CascadeType.ALL})
+  @Builder.Default
+  private List<AuthorEntity> written_by = new ArrayList<>();
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    BookEntity that = (BookEntity) o;
-    return Objects.equals(id, that.id);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
+  public List<AuthorEntity> getWrittenBy() {
+    return written_by;
   }
 
 
+  // Wenn eingeblendet --> Endlosschleife
+  @Override
   public String toString() {
     return "BookEntity{" +
         "id=" + id +
@@ -55,4 +53,5 @@ public class BookEntity {
         //", written_by=" + written_by +
         '}';
   }
+
 }

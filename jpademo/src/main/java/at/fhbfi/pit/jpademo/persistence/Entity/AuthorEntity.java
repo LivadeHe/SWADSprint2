@@ -9,17 +9,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@Table
 public class AuthorEntity {
 
   @Id
@@ -39,30 +41,21 @@ public class AuthorEntity {
       joinColumns = @JoinColumn(name = "auth_id"),
       inverseJoinColumns = @JoinColumn(name = "book_id"))
   @Builder.Default
-  private Set<BookEntity> written_books = new HashSet<>();
+  private List<BookEntity> written_books = new ArrayList<>();
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    AuthorEntity that = (AuthorEntity) o;
-    return Objects.equals(id, that.id);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
+  public List<BookEntity> getWrittenBooks() {
+    return written_books;
   }
 
   @Override
   public String toString() {
-    return "AuthorEntity{" +
+    return "AuthorEntity(" +
         "id=" + id +
         ", name='" + name + '\'' +
         ", mail='" + mail + '\'' +
         ", written_books=" + written_books +
-        '}';
+        ")";
   }
-
 
 }
