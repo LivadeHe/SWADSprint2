@@ -1,11 +1,10 @@
 package at.fhbfi.pit.jpademo;
 
 import at.fhbfi.pit.jpademo.persistence.Entity.AuthorEntity;
-import at.fhbfi.pit.jpademo.persistence.Entity.HobbyEntity;
-import at.fhbfi.pit.jpademo.persistence.Entity.PersonEntity;
+import at.fhbfi.pit.jpademo.persistence.Entity.BookEntity;
 import at.fhbfi.pit.jpademo.persistence.Repository.AuthorRepository;
-import at.fhbfi.pit.jpademo.persistence.Repository.HobbyRepository;
-import at.fhbfi.pit.jpademo.persistence.Repository.PersonRepository;
+import at.fhbfi.pit.jpademo.persistence.Repository.BookRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,14 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 class JpademoApplicationTests {
 
   @Autowired
-  private PersonRepository personRepository;
-
-  @Autowired
-  private HobbyRepository hobbyRepository;
-
+  private BookRepository bookRepository;
   @Autowired
   private AuthorRepository authorRepository;
 
@@ -45,97 +41,272 @@ class JpademoApplicationTests {
         .mail("franz@kafka.com")
         .build());
 
+    authors.add(AuthorEntity.builder()
+        .name("Tolkien")
+        .mail("tolkien@tolkien.com")
+        .build());
+
+    authors.add(AuthorEntity.builder()
+        .name("Tolkien")
+        .mail("jrr@tolkien.com")
+        .build());
+
     authorRepository.saveAll(authors);
+    System.out.println("****** Alle Authors *****");
+    authorRepository.findAll().forEach(System.out::println);
+    System.out.println("****** Alle mit Name goethe *****");
+    authorRepository.findByName("Goethe").forEach(System.out::println);
+    System.out.println("****** Authors mit name Tolkien ASC *****");
+    authorRepository.findByNameOrderByMailAsc("Tolkien").forEach(System.out::println);
+    System.out.println("****** Authors finden bei Teil vom Mailadresse *****");
+    authorRepository.findByMailContaining("kien@to");
+    System.out.println("***********");
+    System.out.println("***********");
+    System.out.println("***********");
+  }
+
+
+  @Test
+  void testBookPersistence() {
+    List<BookEntity> books = new ArrayList<>();
+
+    books.add(BookEntity.builder()
+        .title("Faust")
+        .isbn(12345L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Die Verwandlung")
+        .isbn(123456789L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die Gefährten")
+        .isbn(3589745L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die zwei Türme")
+        .isbn(3811477L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die Rückkehr des Königs")
+        .isbn(998251474L)
+        .build());
+
+    bookRepository.saveAll(books);
+    System.out.println("****** Alle Bücher *****");
+    bookRepository.findAll().forEach(System.out::println);
+    System.out.println("***** Bücher mit im Titel Verwandl ******");
+    bookRepository.findByTitleContaining("Verwandl").forEach(System.out::println);
+    System.out.println("****** Bücher mit im Title Lord ASC *****");
+    bookRepository.findByTitleContainingOrderByTitleAsc("Lord").forEach(System.out::println);
+    System.out.println("***********");
+    System.out.println("***********");
+    System.out.println("***********");
+  }
+
+
+  @Transactional
+  @Test
+  void testCreateBooksAndAuthors() {
+    AuthorEntity goethe = AuthorEntity.builder()
+        .name("Goethe")
+        .mail("wolfgang@goethe.com")
+        .build();
+
+    AuthorEntity kafka = AuthorEntity.builder()
+        .name("Kafka")
+        .mail("franz@kafka.com")
+        .build();
+
+    AuthorEntity tolkien = AuthorEntity.builder()
+        .name("Tolkien")
+        .mail("tolkien@tolkien.com")
+        .build();
+
+    authorRepository.saveAll(List.of(goethe, kafka, tolkien));
+
+    BookEntity faust = BookEntity.builder()
+        .title("Faust")
+        .isbn(489745614679L)
+        .build();
+
+    BookEntity leidensWerthers = BookEntity.builder()
+        .title("Die Leiden des jungen Werthers")
+        .isbn(89786543146L)
+        .build();
+
+    BookEntity lord1 = BookEntity.builder()
+        .title("Lord of the Rings - Die Gefährten")
+        .isbn(3589745L)
+        .build();
+
+    bookRepository.saveAll(List.of(faust, leidensWerthers, lord1));
+
+    // Verbinde Bücher mit Autoren
+    List<AuthorEntity> authors = new ArrayList<>();
+    authors.add(goethe);
+    authors.add(kafka);
+
+    List<BookEntity> booksGoethe = new ArrayList<>();
+    booksGoethe.add(faust);
+    booksGoethe.add(leidensWerthers);
+    booksGoethe.add(lord1);
+
+    // Autoren für das Buch lord1 setzen
+    lord1.setWrittenBy(authors);
+
+
+    //  Bücher für die Autoren setzen
+    for (AuthorEntity author : authors) {
+      author.setWrittenBooks(booksGoethe);
+    }
+    authorRepository.saveAll(authors);
+    bookRepository.save(lord1);
+
+    // alle Bücher
+    System.out.println("****** Alle Bücher ******");
+    bookRepository.findAll().forEach(System.out::println);
+
+    // alle Autoren
+    System.out.println("****** Alle Autoren ******");
+    authorRepository.findAll().forEach(System.out::println);
+  }
+
+
+  @Transactional
+  @Test
+  void testAuthorBook() {
+    AuthorEntity goethe = AuthorEntity.builder()
+        .name("Goethe")
+        .mail("wolfgang@goethe.com")
+        .build();
+
+    AuthorEntity kafka = AuthorEntity.builder()
+        .name("Kafka")
+        .mail("franz@kafka.com")
+        .build();
+
+    AuthorEntity tolkien = AuthorEntity.builder()
+        .name("Tolkien")
+        .mail("tolkien@tolkien.com")
+        .build();
+    authorRepository.saveAll(List.of(goethe, kafka, tolkien));
+
+    BookEntity faust = BookEntity.builder()
+        .title("Faust")
+        .isbn(489745614679L)
+        .build();
+
+    BookEntity leidensWerthers = BookEntity.builder()
+        .title("Die Leiden des jungen Werthers")
+        .isbn(89786543146L)
+        .build();
+
+    BookEntity lord1 = BookEntity.builder()
+        .title("Lord of the Rings - Die Gefährten")
+        .isbn(3589745L)
+        .build();
+
+    BookEntity lord2 = BookEntity.builder()
+        .title("Lord of the Rings - Die zwei Türme")
+        .isbn(3811477L)
+        .build();
+
+    BookEntity lord3 = BookEntity.builder()
+        .title("Lord of the Rings - Die Rückkehr des Königs")
+        .isbn(998251474L)
+        .build();
+    bookRepository.saveAll(List.of(faust, leidensWerthers, lord1, lord2, lord3));
+
+//    AuthorEntity goetheAuthor = authorRepository.findByName("Goethe").get(0);
+//    AuthorEntity kafkaAuthor = authorRepository.findByName("Kafka").get(0);
+//    AuthorEntity tolkienAuthor = authorRepository.findByName("Tolkien").get(0);
+//
+//    BookEntity lord1Book = bookRepository.findByTitle("Lord of the Rings - Die Gefährten").get(0);
+
+//    faust.getWrittenBy().add(goetheAuthor);
+//    leidensWerthers.getWrittenBy().add(goetheAuthor);
+//    bookRepository.saveAll((List.of(faust, leidensWerthers)));
+
+    ArrayList<AuthorEntity> authors = new ArrayList<>();
+    authors.add(goethe);
+    authors.add(kafka);
+    //authors.add(tolkienAuthor);
+
+    ArrayList<BookEntity> booksGoethe = new ArrayList<>();
+    booksGoethe.add(faust);
+    booksGoethe.add(leidensWerthers);
+    booksGoethe.add(lord1);
+
+    // Zuweisen von Autoren bei LOTR 1
+    lord1.setWrittenBy(authors);
+
+    // Alle Books bei Goethe hinterlegen
+    for (AuthorEntity author : authors) {
+      author.setWrittenBooks(booksGoethe);
+    }
+
+    // Beide speichern
+    bookRepository.save(lord1);
+    authorRepository.saveAll(authors);
+
+
+ /*   goethe.setWrittenBooks(booksFaust);
+    authorRepository.save(goethe);*/
+    //goethe.setWrittenBooks(leidensWerthers);
+    bookRepository.findAll().forEach(System.out::println);
     authorRepository.findAll().forEach(System.out::println);
 
-  }
+    // goethe.getWrittenBooks().add(faust);
+    //goethe.getWrittenBooks().add(leidensWerthers);
+//    goethe.getWrittenBooks().add(lord1);
+//    authorRepository.save(goethe);
+//    tolkien.getWrittenBooks().add(lord1);
+//    tolkien.getWrittenBooks().add(lord2);
+//    tolkien.getWrittenBooks().add(lord3);
+//    authorRepository.save(tolkien);
 
-  @Test
-  void testPersonPersistence() {
+//    System.out.println("****** Alle Bücher von Goethe ******");
+//    authorRepository.findByNameOrderByMailAsc("Goethe").forEach(System.out::println);
 
-    List<PersonEntity> persons = new ArrayList<>();
+//
+//    System.out.println("****** Alle Autoren mit Bücher ******");
+//    authorRepository.findAll().forEach(System.out::println);
 
-    persons.add(PersonEntity.builder()
-        .name("Sara")
-        .age(30)
-        .build());
+    // Funktioniert noch nicht - weil getWritten_by is null
+    // (im toString ergänzen verursacht endlosschleife)
+//    System.out.println("****** Alle Bücher mit Autoren ******");
+//    bookRepository.findAll().forEach(System.out::println);
 
-    persons.add(PersonEntity.builder()
-        .name("Marc")
-        .age(40)
-        .build());
+    //Bücher geschrieben von Goethe
+/*    System.out.println("****** Bücher von " + goethe.getName() + ":");
+    for (BookEntity book : goethe.getWrittenBooks()) {
+      System.out.println(book.getTitle());
+    }*/
 
-    personRepository.saveAll(persons);
-    personRepository.findAll().forEach(System.out::println);
+    //Bücher geschrieben von Tolkien
+ /*   System.out.println("****** Bücher von " + tolkien.getName() + ":");
+    for (BookEntity book : tolkien.getWrittenBooks()) {
+      System.out.println(book.getTitle());
+    }*/
 
+    // Autoren von lord1 (Lord of the Rings - Die Gefährten)
+ /*   BookEntity lotr = bookRepository.findByTitle("Lord of the Rings - Die Gefährten").get(0);
+    System.out.println("****** Autoren von " + lotr.getTitle() + ":");
+    for (AuthorEntity author : lotr.getWrittenBy()) {
+      System.out.println(author.getName());
+    }*/
 
-    //personRepository.deleteById(1L);
-    personRepository.findAll().forEach(System.out::println);
-    // nur 1 versteht er nicht --> deshalb 1L --> somit type Long
-//    personRepository.deleteAll();
+    // Goethe wird 2x ausgegeben, einmal id1(Test Autor) und einmal id5(Test AuthorBook)
+ /*   System.out.println("****** Alle mit Name goethe *****");
+    authorRepository.findByName("Goethe").forEach(System.out::println);
 
-
-  }
-
-  @Test
-  void testHobbyPersistence() {
-
-    List<HobbyEntity> hobbies = new ArrayList<>();
-
-    hobbies.add(HobbyEntity.builder()
-        .name("Jogging")
-        .cost(0F)
-        .build());
-
-    hobbies.add(HobbyEntity.builder()
-        .name("Reading")
-        .cost(10.0F)
-        .build());
-
-    hobbies.add(HobbyEntity.builder()
-        .name("Cycling")
-        .cost(30.0F)
-        .build());
-
-    hobbyRepository.saveAll(hobbies);
-    System.out.println("************");
-    hobbyRepository.findAll().forEach(System.out::println);
-    System.out.println("************");
-    hobbyRepository.findByCost(10.0F).forEach(System.out::println);
-    System.out.println("************");
-    hobbyRepository.findByCostGreaterThan(8.0F).forEach(System.out::println);
-    System.out.println("************");
-    hobbyRepository.findAllByOrderByCostAsc();
-  }
-
-  @Test
-  void testPersonHobby() {
-
-    PersonEntity person = PersonEntity.builder()
-        .name("anna")
-        .build();
-    personRepository.save(person);
-
-    HobbyEntity running = HobbyEntity.builder()
-        .name("running")
-        .build();
-    HobbyEntity swimming = HobbyEntity.builder()
-        .name("swimming")
-        .build();
-
-    hobbyRepository.saveAll(List.of(running, swimming));
-
-    PersonEntity anna = personRepository.findByName("anna").get(0);
-    running.setPerson(anna);
-    hobbyRepository.save(running);
-    swimming.setPerson(anna);  //Set überschreibt Person in DB
-    hobbyRepository.save(swimming);
-
-    hobbyRepository.findAll().forEach(System.out::println);
-    System.out.println("************");
-    System.out.println("Hobbies von " + anna);
-    hobbyRepository.findByPerson(anna).forEach(System.out::println);
-
+    System.out.println("***********");
+    System.out.println("***********");
+    System.out.println("***********");*/
   }
 
 }

@@ -1,5 +1,6 @@
 package at.fhbfi.pit.jpademo.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,29 +30,26 @@ public class BookEntity {
   private Long id;
   @Column(name = "book_title")
   private String title;
-
   @Column(name = "book_isbn")
   private Long isbn;
 
-  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "written_books", cascade = {CascadeType.ALL})
-  @Builder.Default
-  private List<AuthorEntity> written_by = new ArrayList<>();
-
+  //@ToString.Exclude
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "writtenBooks", cascade = {CascadeType.ALL})
+  //@JsonIgnore
+  private List<AuthorEntity> writtenBy = new ArrayList<>();
 
   public List<AuthorEntity> getWrittenBy() {
-    return written_by;
+    return writtenBy;
   }
 
-
-  // Wenn eingeblendet --> Endlosschleife
-  @Override
+/*  @Override
   public String toString() {
     return "BookEntity{" +
         "id=" + id +
         ", title='" + title + '\'' +
         ", isbn=" + isbn +
-        //", written_by=" + written_by +
+        ", written by=" + writtenBy +
         '}';
-  }
+  }*/
 
 }

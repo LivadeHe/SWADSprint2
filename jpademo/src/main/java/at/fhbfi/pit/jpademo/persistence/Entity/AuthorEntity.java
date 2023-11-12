@@ -1,5 +1,6 @@
 package at.fhbfi.pit.jpademo.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,27 +36,27 @@ public class AuthorEntity {
   @Column(name = "auth_mail")
   private String mail;
 
+  //@ToString.Exclude
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "author_book",
       joinColumns = @JoinColumn(name = "auth_id"),
       inverseJoinColumns = @JoinColumn(name = "book_id"))
-  @Builder.Default
-  private List<BookEntity> written_books = new ArrayList<>();
+  //@JsonIgnore
+  private List<BookEntity> writtenBooks = new ArrayList<>();
 
-
-  public List<BookEntity> getWrittenBooks() {
-    return written_books;
-  }
-
-  @Override
+/*  @Override
   public String toString() {
-    return "AuthorEntity(" +
+    return "AuthorEntity{" +
         "id=" + id +
         ", name='" + name + '\'' +
         ", mail='" + mail + '\'' +
-        ", written_books=" + written_books +
-        ")";
+        ", written books=" + writtenBooks +
+        '}';
+  }*/
+
+  public List<BookEntity> getWrittenBooks() {
+    return writtenBooks;
   }
 
 }
