@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "book")
+//@Table(name = "book")
 public class BookEntity {
 
   @Id
@@ -34,7 +34,7 @@ public class BookEntity {
   private Long isbn;
 
   //@ToString.Exclude
-  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "writtenBooks", cascade = {CascadeType.ALL})
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "writtenBooks")
   //@JsonIgnore
   private List<AuthorEntity> writtenBy = new ArrayList<>();
 

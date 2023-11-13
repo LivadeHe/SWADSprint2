@@ -4,8 +4,6 @@ import at.fhbfi.pit.jpademo.Service.AuthorService;
 import at.fhbfi.pit.jpademo.Service.dto.AuthorDto;
 import at.fhbfi.pit.jpademo.persistence.Entity.AuthorEntity;
 import at.fhbfi.pit.jpademo.persistence.Repository.AuthorRepository;
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

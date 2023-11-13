@@ -37,7 +37,7 @@ public class AuthorEntity {
   private String mail;
 
   //@ToString.Exclude
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "author_book",
       joinColumns = @JoinColumn(name = "auth_id"),
