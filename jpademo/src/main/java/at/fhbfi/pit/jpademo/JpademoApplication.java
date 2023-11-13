@@ -1,7 +1,7 @@
 package at.fhbfi.pit.jpademo;
 
-import at.fhbfi.pit.jpademo.persistence.Entity.PersonEntity;
-import at.fhbfi.pit.jpademo.persistence.Repository.PersonRepository;
+import at.fhbfi.pit.jpademo.persistence.Entity.AuthorEntity;
+import at.fhbfi.pit.jpademo.persistence.Repository.AuthorRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,9 +12,8 @@ import java.util.List;
 
 @SpringBootApplication
 public class JpademoApplication {
-
 	@Autowired
-	private PersonRepository personRepository;
+	private AuthorRepository authorRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(JpademoApplication.class, args);
@@ -22,22 +21,29 @@ public class JpademoApplication {
 
 	@PostConstruct
 	public void insertFakeData() {
-		saveTwoPersons();
+		saveThreeAuthors();
 	}
 
-	private void saveTwoPersons() {
-		List<PersonEntity> persons = new ArrayList<>();
-		persons.add(PersonEntity.builder()
-				.name("Sara")
-				.age(30)
-				.build());
+	private void saveThreeAuthors() {
+      List<AuthorEntity> authors = new ArrayList<>();
 
-		persons.add(PersonEntity.builder()
-				.name("Marc")
-				.age(40)
-				.build());
-		personRepository.saveAll(persons);
-	}
+      authors.add(AuthorEntity.builder()
+          .name("Goethe")
+          .mail("wolfgang@goethe.com")
+          .build());
+
+      authors.add(AuthorEntity.builder()
+          .name("Kafka")
+          .mail("franz@kafka.com")
+          .build());
+
+      authors.add(AuthorEntity.builder()
+          .name("Tolkien")
+          .mail("tolkien@tolkien.com")
+          .build());
+
+      authorRepository.saveAll(authors);
+    }
 
 
 }
