@@ -1,7 +1,9 @@
 package at.fhbfi.pit.jpademo;
 
 import at.fhbfi.pit.jpademo.persistence.Entity.AuthorEntity;
+import at.fhbfi.pit.jpademo.persistence.Entity.BookEntity;
 import at.fhbfi.pit.jpademo.persistence.Repository.AuthorRepository;
+import at.fhbfi.pit.jpademo.persistence.Repository.BookRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,38 +14,76 @@ import java.util.List;
 
 @SpringBootApplication
 public class JpademoApplication {
-	@Autowired
-	private AuthorRepository authorRepository;
+  @Autowired
+  private AuthorRepository authorRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(JpademoApplication.class, args);
-	}
+  @Autowired
+  private BookRepository bookRepository;
 
-	@PostConstruct
-	public void insertFakeData() {
-		saveThreeAuthors();
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(JpademoApplication.class, args);
+  }
 
-	private void saveThreeAuthors() {
-      List<AuthorEntity> authors = new ArrayList<>();
+  @PostConstruct
+  public void insertAuthorData() {
+    saveThreeAuthors();
+  }
 
-      authors.add(AuthorEntity.builder()
-          .name("Goethe")
-          .mail("wolfgang@goethe.com")
-          .build());
+  @PostConstruct
+  public void insertBookData() {
+    saveBooks();
+  }
 
-      authors.add(AuthorEntity.builder()
-          .name("Kafka")
-          .mail("franz@kafka.com")
-          .build());
+  private void saveThreeAuthors() {
+    List<AuthorEntity> authors = new ArrayList<>();
 
-      authors.add(AuthorEntity.builder()
-          .name("Tolkien")
-          .mail("tolkien@tolkien.com")
-          .build());
+    authors.add(AuthorEntity.builder()
+        .name("Goethe")
+        .mail("wolfgang@goethe.com")
+        .build());
 
-      authorRepository.saveAll(authors);
-    }
+    authors.add(AuthorEntity.builder()
+        .name("Kafka")
+        .mail("franz@kafka.com")
+        .build());
 
+    authors.add(AuthorEntity.builder()
+        .name("Tolkien")
+        .mail("tolkien@tolkien.com")
+        .build());
+
+    authorRepository.saveAll(authors);
+  }
+
+  private void saveBooks() {
+    List<BookEntity> books = new ArrayList<>();
+
+    books.add(BookEntity.builder()
+        .title("Faust")
+        .isbn(12345L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Die Verwandlung")
+        .isbn(123456789L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die Gefährten")
+        .isbn(3589745L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die zwei Türme")
+        .isbn(3811477L)
+        .build());
+
+    books.add(BookEntity.builder()
+        .title("Lord of the Rings: Die Rückkehr des Königs")
+        .isbn(998251474L)
+        .build());
+
+    bookRepository.saveAll(books);
+  }
 
 }
